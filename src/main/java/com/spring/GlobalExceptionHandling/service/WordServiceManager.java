@@ -1,6 +1,9 @@
 package com.spring.GlobalExceptionHandling.service;
 
 import com.spring.GlobalExceptionHandling.dto.WordResponse;
+import com.spring.GlobalExceptionHandling.exception.ApiException;
+import com.spring.GlobalExceptionHandling.exception.ErrorCodes;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
