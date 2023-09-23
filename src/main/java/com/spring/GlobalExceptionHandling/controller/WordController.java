@@ -26,7 +26,7 @@ public class WordController {
 
         //If word is not found
         if(words.size() == 0){
-            throw new WordsNotFoundException("Wirds with id " + id +" is not found");
+            throw new WordsNotFoundException("Words with id " + id +" is not found");
         }
         return words;
     }

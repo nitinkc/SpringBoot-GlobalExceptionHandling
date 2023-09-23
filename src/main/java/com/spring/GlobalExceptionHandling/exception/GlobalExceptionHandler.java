@@ -7,33 +7,31 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.transaction.IllegalTransactionStateException;
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.Arrays;
 import java.util.Date;
 
-@RestControllerAdvice
+@ControllerAdvice
 @Slf4j
 @Getter
 @Setter
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = { WordsNotFoundException.class})
-    public ResponseEntity<TraceableError> handleApiException(ApiBusinessException ex, WebRequest request){
-        log.error("Handling Exception... Caught exception: {}",ExceptionUtils.getStackTrace(ex));
-        if(ex.getStatusCode() == null) {
-            ex.setStatusCode(HttpStatus.CONFLICT);
-        }
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    public @ResponseBody TraceableError handleApiException(WordsNotFoundException ex, HttpServletRequest request){
+
         TraceableError error = TraceableError.builder()
                 .errorCode(ex.getErrorCode())
                 .errorDescription(ex.getStatusMessage())
                 .exceptionType(ex.getClass().getSimpleName())
                 .exceptionMessage(ExceptionUtils.getStackTrace(ex))
-                .path(request.getContextPath())
+                .path(request.getRequestURI())
                 .statusCode(ex.getStatusCode())
                 .thrownByMethodArgs(ex.getThrownByMethodArgs())
                 .thrownByMethod(ex.getStackTrace()[0].getMethodName())
@@ -42,7 +40,7 @@ public class GlobalExceptionHandler {
                 .errorTitle(ex.getErrorTitle() != null ? ex.getErrorTitle() :"Error" )
                 .build();
 
-        return new ResponseEntity<>(error, ex.getStatusCode());
+        return error;
     }
 
 
