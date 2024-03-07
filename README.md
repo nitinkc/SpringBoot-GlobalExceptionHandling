@@ -1,6 +1,7 @@
 # SpringBoot-GlobalExceptionHandling
 
-(https://nitinkc.github.io/spring/microservices/spring-exceptions/)[https://nitinkc.github.io/spring/microservices/spring-exceptions/]
+[https://nitinkc.github.io/spring/microservices/spring-exceptions/](https://nitinkc.github.io/spring/microservices/spring-exceptions/)
+
 ```shell
 curl --location 'localhost:8089/api/word' \
 --header 'Content-Type: application/json' \
