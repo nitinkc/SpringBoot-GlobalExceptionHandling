@@ -1,6 +1,7 @@
 package com.spring.GlobalExceptionHandling.exception.handlers;
 
 import com.spring.GlobalExceptionHandling.exception.ErrorCodes;
+import com.spring.GlobalExceptionHandling.exception.business.BadInputException;
 import com.spring.GlobalExceptionHandling.exception.dto.MyExceptionResponse;
 import com.spring.GlobalExceptionHandling.exception.dto.TraceableErrorResponse;
 import com.spring.GlobalExceptionHandling.exception.business.DbDownException;
@@ -23,9 +24,8 @@ import java.time.format.DateTimeFormatter;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-
     //Handling 2 exception classes. Notice the parameter of handleNotFoundExceptions method (BusinessException exception)
-    @ExceptionHandler(value = {WordsNotFoundException.class})
+    @ExceptionHandler(value = {DbDownException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<MyExceptionResponse> handleNotFoundExceptions(Exception exception, final HttpServletRequest request) {
         MyExceptionResponse error = MyExceptionResponse.builder()
@@ -34,7 +34,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .requestedURI(request.getRequestURI())
                 .exceptionType(exception.getClass().getSimpleName())
                 .methodName(request.getMethod())
-                .errorCode(ErrorCodes.ERR_122.getErrorCode() + " :: " + ErrorCodes.ERR_122.getErrorMessage())
+                .errorCode(ErrorCodes.ERR_140.getErrorCode() + " :: " + ErrorCodes.ERR_140.getErrorMessage())
+                .thrownByMethod(exception.getStackTrace()[0].getMethodName())
+                .thrownByClass(exception.getStackTrace()[0].getClassName())
+                .timestamp(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS a z(O)")))
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    //Handling 2 exception classes. Notice the parameter of handleNotFoundExceptions method (BusinessException exception)
+    @ExceptionHandler(value = {IllegalArgumentException.class, BadInputException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<MyExceptionResponse> handleInputExceptions(Exception exception, final HttpServletRequest request) {
+        MyExceptionResponse error = MyExceptionResponse.builder()
+                .from("From Exception Response :: handleInputExceptions")
+                .errorMessage(exception.getMessage())
+                .requestedURI(request.getRequestURI())
+                .exceptionType(exception.getClass().getSimpleName())
+                .methodName(request.getMethod())
+                .errorCode(ErrorCodes.ERR_140.getErrorCode() + " :: " + ErrorCodes.ERR_140.getErrorMessage())
                 .thrownByMethod(exception.getStackTrace()[0].getMethodName())
                 .thrownByClass(exception.getStackTrace()[0].getClassName())
                 .timestamp(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS a z(O)")))
@@ -44,7 +63,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(value = {DbDownException.class})
+    @ExceptionHandler(value = {WordsNotFoundException.class})
     @ResponseStatus(value = HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS)
     public @ResponseBody TraceableErrorResponse handleDbExceptions(
             Exception exception, final HttpServletRequest request) {

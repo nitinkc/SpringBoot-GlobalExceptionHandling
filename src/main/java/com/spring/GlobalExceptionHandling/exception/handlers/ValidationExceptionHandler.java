@@ -45,6 +45,7 @@ public class ValidationExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    /* This one Takes Precedence
     @ExceptionHandler(BadInputException.class)
     public ResponseEntity<Object> handleAllExceptions(BadInputException ex, WebRequest request) {
         String errorMessage = " An error occurred:"  + ex.getMessage() + "\n" +
@@ -52,7 +53,7 @@ public class ValidationExceptionHandler {
 
 
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -65,7 +66,7 @@ public class ValidationExceptionHandler {
         });
 
         MyExceptionResponse myExceptionResponse = MyExceptionResponse.builder()
-                .from("ExceptionResponse")
+                .from("Exception Response :: MethodArgumentNotValidException")
                 .timestamp(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS a z(O)")))
                 //.exceptionType(ex.getBindingResult().toString())
                 .errorMessage(errors.toString())
@@ -91,7 +92,7 @@ public class ValidationExceptionHandler {
     protected ResponseEntity<MyExceptionResponse> handleRequestParamNotValid(Exception exception, final HttpServletRequest request) {
 
         MyExceptionResponse error = MyExceptionResponse.builder()
-                .from("Validation Exception Response from handleRequestParamNotValid")
+                .from("Validation Exception Response from handleRequestParamNotValid :: ConstraintViolationException")
                 .errorMessage(exception.getMessage())
                 .requestedURI(request.getRequestURI())
                 .exceptionType(exception.getClass().getSimpleName())
