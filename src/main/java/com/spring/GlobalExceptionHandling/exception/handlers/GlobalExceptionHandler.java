@@ -4,7 +4,6 @@ import com.spring.GlobalExceptionHandling.exception.ErrorCodes;
 import com.spring.GlobalExceptionHandling.exception.business.BadInputException;
 import com.spring.GlobalExceptionHandling.exception.dto.MyExceptionResponse;
 import com.spring.GlobalExceptionHandling.exception.dto.TraceableErrorResponse;
-import com.spring.GlobalExceptionHandling.exception.business.DbDownException;
 import com.spring.GlobalExceptionHandling.exception.business.WordsNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Handling 2 exception classes. Notice the parameter of handleNotFoundExceptions method (BusinessException exception)
-    @ExceptionHandler(value = {DbDownException.class})
+    @ExceptionHandler(value = {NumberFormatException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<MyExceptionResponse> handleNotFoundExceptions(Exception exception, final HttpServletRequest request) {
         MyExceptionResponse error = MyExceptionResponse.builder()

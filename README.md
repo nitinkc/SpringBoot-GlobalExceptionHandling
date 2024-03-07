@@ -135,3 +135,56 @@ curl --location 'localhost:8089/api/word' \
     "errorTitle": "124 :: Error: :: Some Business Exception"
 }
 ```
+
+# Validator
+
+
+```java
+@Documented
+@Constraint(validatedBy = EnglishWordValidator.class)
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface EnglishWord {
+    String message() default "Word must be a valid English word";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}
+```
+`EnglishWordValidator` class implementation
+
+```java
+public class EnglishWordValidator implements ConstraintValidator<EnglishWord, String> {
+
+    @Override
+    public void initialize(EnglishWord constraintAnnotation) {
+    }
+
+    @Override
+    public boolean isValid(String word, ConstraintValidatorContext constraintValidatorContext) {
+        // implement logic here to check if the word is valid.
+        // This may involve calling an external service or using an external library.
+
+        return checkIfWordIsValidDictionaryWord(word);
+
+    }
+
+    private boolean checkIfWordIsValidDictionaryWord(String word) {
+        // For demonstration purposes, all alphanumeric words are non dictionary words
+        return !StringUtils.isAlphanumeric(word);
+    }
+}
+```
+
+The custom validator can be used as below :-
+```java
+@Data
+public class MyRequestDTO {
+    @NotNull
+    private String max;
+
+    @NotNull
+    @Size(min = 3, max = 10)
+    @EnglishWord
+    private String word;
+}
+```
