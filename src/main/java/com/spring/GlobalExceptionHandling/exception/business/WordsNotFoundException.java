@@ -1,7 +1,4 @@
-package com.spring.GlobalExceptionHandling.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package com.spring.GlobalExceptionHandling.exception.business;
 
 //@ResponseStatus(HttpStatus.NOT_FOUND)
 public class WordsNotFoundException extends ApiException {

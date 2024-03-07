@@ -1,19 +1,19 @@
-package com.spring.GlobalExceptionHandling.exception;
+package com.spring.GlobalExceptionHandling.exception.business;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class ApiRuntimeException extends RuntimeException {
     private static final long serialVersionUID = 1L;
+
     private String correlationId;
-
     private HttpStatus statusCode;
-
     private String thrownByMethod;
-
     private String[] thrownByMethodArgs;
 
     public ApiRuntimeException(Throwable cause) {

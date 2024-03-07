@@ -1,34 +1,49 @@
 package com.spring.GlobalExceptionHandling.controller;
 
-import com.spring.GlobalExceptionHandling.exception.WordsNotFoundException;
-import com.spring.GlobalExceptionHandling.service.WordServiceManager;
+import com.spring.GlobalExceptionHandling.exception.business.WordsNotFoundException;
+import com.spring.GlobalExceptionHandling.service.ServiceManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class WordController {
 
     @Autowired
-    WordServiceManager service;
+    ServiceManager service;
     //Retrieve specific users
-    @GetMapping(path = "/word/{id}/{max}")
-    public List<String> retrieveUserById(@PathVariable String id,
-                                         @PathVariable String max)
+    @PostMapping(path = "/word")
+    public ResponseEntity<List<String>> retrieveUserById(@RequestBody Map<String,Object> request)
             throws WordsNotFoundException {
 
-        List<String> words = service.getData(id,max);
+        String word = (String) request.get("word");
+        String max = (String) request.get("max");
 
-        //If word is not found
-        if(words.size() == 0){
-            throw new WordsNotFoundException("Words with id " + id +" is not found");
-        }
-        return words;
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(service.getData(word,max));
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, Object>> testHttpBin(@RequestParam("file") MultipartFile file,
+                                                           @RequestHeader HttpHeaders headers) {
+        // Handle file upload here
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error Message","Please upload a file."));
+        }
+
+        String fileName = file.getOriginalFilename();
+        Map<String,Object> response = service.uploadFile(file, headers);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
 }
