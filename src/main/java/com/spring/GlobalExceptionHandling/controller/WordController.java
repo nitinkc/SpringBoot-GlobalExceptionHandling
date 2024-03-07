@@ -30,20 +30,4 @@ public class WordController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.getData(word,max));
     }
-
-    @PostMapping("/upload")
-    public ResponseEntity<Map<String, Object>> testHttpBin(@RequestParam("file") MultipartFile file,
-                                                           @RequestHeader HttpHeaders headers) {
-        // Handle file upload here
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error Message","Please upload a file."));
-        }
-
-        String fileName = file.getOriginalFilename();
-        Map<String,Object> response = service.uploadFile(file, headers);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
-    }
 }
