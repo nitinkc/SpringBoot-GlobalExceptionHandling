@@ -21,6 +21,6 @@ public class EnglishWordValidator implements ConstraintValidator<EnglishWord, St
 
     private boolean checkIfWordIsValidDictionaryWord(String word) {
         // For demonstration purposes, all alphanumeric words are non dictionary words
-        return !StringUtils.isAlphanumeric(word);
+        return !StringUtils.isNumeric(word);
     }
 }
